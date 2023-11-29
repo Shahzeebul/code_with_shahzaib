@@ -1,0 +1,10 @@
+date
+history
+cd deskstop
+touch file.txt
+cat > file1.txt
+cp file.txt file1.txt   -->To copy
+pwd
+ls
+rmdir file.txt
+echo "Hello"
