@@ -1,0 +1,314 @@
+%Average Filter
+originalImage = imread('cameraman.tif');
+filterSize = [3, 3];
+averageFilter = fspecial('average', filterSize);
+filteredImage = imfilter(originalImage, averageFilter);
+subplot(1, 2, 1);
+imshow(originalImage);
+title('Original Image');
+subplot(1, 2, 2);
+imshow(filteredImage);
+title('Filtered Image (3x3 Average Filter)');
+ imwrite(filteredImage, 'filtered_image.jpg');
+
+
+%average filtering of image
+originalImage = imread('tire.tif');
+filterSize = [6, 6];
+averageFilter = fspecial('average', filterSize);
+filteredImage = imfilter(originalImage, averageFilter);
+subplot(1, 2, 1);
+imshow(originalImage);
+title('Original Image');
+subplot(1, 2, 2);
+imshow(filteredImage);
+title('Filtered Image (3x3 Average Filter)');
+imwrite(filteredImage, 'filtered_image.jpg');
+median filter 
+im noise function
+
+
+% Gama based 2 points transformation
+img=imread('cameraman.tif');
+[m,n]=size(img);
+c=2;
+g=1;
+for i= 1 : m
+    for j= 1: n
+        img(i,j)= c * (double(img(i,j))^g);
+    end
+end
+imshow(img);
+
+
+%% HISTOGRAM EQUILIZATION %%
+img=imread('pout.tif');
+[r,c]=size(img);
+frq=zeros(1,256);
+for i=1:r
+    for j=1:c
+        k=img(i,j)+1;
+        frq(1,k)=frq(1,k)+1;
+    end
+end
+%cumulative freq
+cfrq=frq(:,:);
+for n=2:256
+ cfrq(1,n)=frq(1,n)+cfrq(1,n-1);
+end
+%normalization
+for n=1:256
+ cfrq(1,n)=cfrq(1,n)/(r*c);
+end
+%new pixel levels
+for n=1:256
+ cfrq(1,n)=cfrq(1,n)*255;
+end
+%Creating new image
+newImg=uint8(zeros(r,c));
+for i=1:r
+    for j=1:c
+        newImg(i,j)=cfrq(1,img(i,j)+1);
+    end
+end
+imwrite(newImg,'histEqImg.tif','tif');
+figure,subplot(1,2,1), imshow(img), title('original');
+subplot(1,2,2),imshow(newImg,[]), title('histogram equilized');
+
+
+%% HISTOGRAM EQUILIZATION %%
+img=imread('pout.tif');
+figure
+subplot(1,3,1);
+imshow(img);
+subplot(1,3,2:3);
+imhist(img);
+% Histogram 
+img=histeq(img,256);
+figure
+subplot(1,3,1);
+imshow(img);
+subplot(1,3,2:3);
+imhist(img);
+
+
+% Intensity level slicing
+img=imread('moon.tif');
+[m,n]=size(img);
+for i = 1 : m
+    for j = 1 : n
+        if (img(i,j)<110)
+            img(i,j)=255;
+        end
+    end
+end
+imshow(img);
+
+
+%Intensity slicing 
+I=imread('pout.tif');
+[m,n]=size(I);
+J=zeros(m,n);
+K=zeros(m,n);
+for i=1:m
+    for j=1:n
+        if(I(i,j)>=150 && I(i,j)<200)
+            J(i,j)=255;
+        else 
+            J(i,j)=I(i,j);
+        end
+    end
+end
+for i=1:m
+    for j=1:n
+        if(I(i,j)>=150 && I(i,j)<200)
+            K(i,j)=255;
+        else 
+            K(i,j)=25;
+        end
+    end
+end
+figure, subplot(2,2,1),imshow(I);
+title('original')
+subplot(2,2,2),imshow(J,[]);
+title('Intensity Slicing, no change')
+subplot(2,1,2),imshow(K,[]);
+title('Intensity Slicing with subtling')
+
+%%Intensity Slicing
+I=imread('pout.tif');
+[m,n]=size(I);
+J=zeros(m,n);
+K=zeros(m,n);
+for i=1:m
+    for j=1:n
+        if(I(i,j)>=150 && I(i,j)<200)
+            J(i,j)=255;
+        else 
+            J(i,j)=I(i,j);
+        end
+    end
+end
+
+for i=1:m
+    for j=1:n
+        if(I(i,j)>=150 && I(i,j)<200)
+            K(i,j)=255;
+        else 
+            K(i,j)=25;
+        end
+    end
+end
+figure, subplot(1,3,1),title('original'),imshow(I);
+subplot(1,3,2),title('Intensity Slicing, no change'),imshow(J,[]);
+subplot(1,3,3),title('Intensity Slicing with subtling'),imshow(K,[]);
+
+
+%%Log
+I = imread('cameraman.tif');
+[m, n] = size(I);
+NegI = zeros(m, n);
+LogI = zeros(m, n);
+for i = 1:m
+    for j = 1:n
+        NegI(i, j) = 255 - I(i, j);
+        
+        LogI(i, j) = 1 + I(i, j);
+    end
+end
+Lg_I=log(LogI);
+subplot(1, 2, 1), imshow(uint8(NegI));
+title('Negative Image');
+subplot(1, 2, 2), imshow(uint8(LogI));
+title('Logarithm Image');
+
+
+%%Log and Neg
+I = imread('cameraman.tif');
+[m, n] = size(I);
+neg = zeros(m, n);
+LogI = zeros(m, n);
+for i = 1:m
+    for j = 1:n
+        neg(i, j) = 255 - I(i, j);
+        LogI(i, j) = 1 + I(i, j);
+    end
+end
+imshow(uint8(neg));
+
+
+%%Median Filtering
+originalImage = imread('cameraman.tif');
+filterSize = [3, 3];
+medianFiltered = medfilt2(originalImage, filterSize);
+subplot(1, 2, 1);
+imshow(originalImage);
+title('Original Image');
+subplot(1, 2, 2);
+imshow(medianFiltered);
+title('Median-Filtered Image');
+imwrite(medianFiltered, 'median_filtered_image.jpg');
+
+
+% Negative Image
+im = imread('cameraman.tif');
+[m, n] = size(im);
+neg = zeros(m, n);
+for i = 1:m
+    for j = 1:n
+        neg(i, j) = 255 - im(i, j);
+    end
+end
+imshow(uint8(neg));
+
+
+% Noise in an image
+originalImage = imread('tire.tif');
+noiseType = 'gaussian';
+noiseLevel = 0.2;
+noisyImage = imnoise(originalImage, noiseType, noiseLevel);
+subplot(1, 2, 1);
+imshow(originalImage);
+title('Original Image');
+subplot(1, 2, 2);
+imshow(noisyImage);
+title('Noisy Image');
+imwrite(noisyImage, 'noisy_image.jpg');
+
+
+%%Quantization
+I = imread('cameraman.tif');
+[m, n] = size(I);
+A = zeros(m, n);
+B = zeros(m, n);
+C = zeros(m, n);
+D = zeros(m, n);
+E = zeros(m, n);
+F = zeros(m, n);
+G = zeros(m, n);
+H = zeros(m, n);
+for i = 1:m
+    for j = 1:n
+        A(i, j) = 2 * (I(i, j) / 2);
+        B(i, j) = 4 * (I(i, j) / 4);
+        C(i, j) = 8 * (I(i, j) / 8);
+        D(i, j) = 16 * (I(i, j) / 16);
+        E(i, j) = 32 * (I(i, j) / 32);
+        F(i, j) = 64 * (I(i, j) / 64);
+        G(i, j) = 128 * (I(i, j) / 128);
+        H(i, j) = 256 * (I(i, j) / 256);
+    end
+end
+figure, subplot(2, 3, 1), imshow(A, []);
+subplot(2, 2, 2), imshow(B, []), title('128 gray levels');
+subplot(2, 2, 3), imshow(C, []), title('64 gray levels');
+subplot(2, 2, 4), imshow(D, []), title('32 gray levels');
+figure, subplot(2, 3, 1), imshow(E, []), title('16 gray levels');
+subplot(2, 2, 2), imshow(F, []), title('8 gray levels');
+subplot(2, 2, 3), imshow(G, []), title('4 gray levels');
+subplot(2, 2, 4), imshow(H, []), title('2 gray levels');
+
+
+%RGB
+I = imread('peppers.png');
+red=I(:,:,1);
+figure,imshow(red);
+green=I(:,:,2);
+figure,imshow(green);
+blue=I(:,:,3);
+figure,imshow(blue);
+
+
+%sampling
+I = imread('cameraman.tif');
+[m, n] = size(I);
+A = zeros(m/2, n/2);
+for i = 1:m/2
+    for j = 1:n/2
+        A(i, j) = I(2*i, 2*j);
+    end
+end
+B = zeros(m/4, n/4);
+for i = 1:m/4
+    for j = 1:n/4
+        B(i, j) = A(2*i, 2*j);
+    end
+end
+C = zeros(m/8, n/8);
+for i = 1:m/8
+    for j = 1:n/8
+        C(i, j) = B(2*i, 2*j);
+    end
+end
+D = zeros(m/16, n/16);
+for i = 1:m/16
+    for j = 1:n/16
+        D(i, j) = B(2*i, 2*j);
+    end
+end
+imshow(B, []);
+
+
+% Sharpening of an image
+img = imsharpen(img,'Radius',200,'Amount',2);
+figure,imshow(img);
